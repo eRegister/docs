@@ -1,3 +1,15 @@
+### **21 Jul 2025**
+
+#### Reports
+- We have optimized the sql query for better performance, and also removed duplicates
+- Avoided using JOIN keyword all the time. Now the query is using conditional keyword CASE and WHEN statements to query data
+- Also added order by patient name so that duplicates can easily be seen
+- Removed redundant code
+
+### **23 Jan 2025**
+
+#### Reports
+- A fix on HTS reports as reported on `02-Jan-2025`
 
 ### **02 Jan 2025**
 
