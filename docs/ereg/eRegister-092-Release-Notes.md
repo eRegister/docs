@@ -1,4 +1,38 @@
-### **21 Jul 2025**
+## **04 Aug 2025**
+
+#### Generic Documentation of Changes Made to HIV Testing Reports
+
+#### 1. Deduplication Enhancements
+
+Replaced nested subqueries that returned multiple rows per patient with grouped queries to ensure one unique row per patient.
+
+Applied GROUP BY on core patient identifiers and demographic attributes (e.g. name, gender, age group).
+
+Used MAX() on time-sensitive fields (e.g. observation date, encounter ID) to extract the most relevant record per patient for reporting.
+
+Ensured that all joins involving testing forms, modalities, and observations no longer result in row multiplication due to repeated entries.
+
+#### 2. Structural Refactoring
+Preserved the overall query logic and structure while optimizing how inner joins are handled.
+
+Consolidated observation-based subqueries to ensure consistent date filtering and avoid redundant joins.
+
+#### 3. Modality and Observation Filtering Alignment
+All filtering logic related to HIV testing modalities and testing forms was aligned to consistently reference the most recent relevant record.
+
+Ensured that testing history and testing modality are associated with the same encounter per patient.
+
+#### 4. Performance Improvements
+Removed use of SELECT DISTINCT from inner blocks in favor of GROUP BY, which is more efficient and deterministic for deduplication.
+
+Reduced the likelihood of Cartesian products by joining on more specific and consistent keys such as person_id and encounter_id.
+
+#### 5. Result Set Integrity
+Ensured final result set columns (patient identifier, name, age, gender, HIV status, age group, etc.) remain accurate and unduplicated.
+
+Retained the expected semantic structure (e.g. columns labeled as “New”, “PITC”, “HIV Status”) without altering the labels or definitions.
+
+## **21 Jul 2025**
 
 #### Reports
 - We have optimized the sql query for better performance, and also removed duplicates
@@ -6,12 +40,12 @@
 - Also added order by patient name so that duplicates can easily be seen
 - Removed redundant code
 
-### **23 Jan 2025**
+## **23 Jan 2025**
 
 #### Reports
 - A fix on HTS reports as reported on `02-Jan-2025`
 
-### **02 Jan 2025**
+## **02 Jan 2025**
 
 #### Reports
 - HTS-001 and HTS-002 corrected to pick all HTS clients from all service points
