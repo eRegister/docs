@@ -2632,7 +2632,26 @@
 
   <h1>eRegister 092 Release Notes</h1>
 
-<h3 id="21-jul-2025"><strong>21 Jul 2025</strong></h3>
+<h2 id="04-aug-2025"><strong>04 Aug 2025</strong></h2>
+<h4 id="generic-documentation-of-changes-made-to-hiv-testing-reports">Generic Documentation of Changes Made to HIV Testing Reports</h4>
+<h4 id="1-deduplication-enhancements">1. Deduplication Enhancements</h4>
+<p>Replaced nested subqueries that returned multiple rows per patient with grouped queries to ensure one unique row per patient.</p>
+<p>Applied GROUP BY on core patient identifiers and demographic attributes (e.g. name, gender, age group).</p>
+<p>Used MAX() on time-sensitive fields (e.g. observation date, encounter ID) to extract the most relevant record per patient for reporting.</p>
+<p>Ensured that all joins involving testing forms, modalities, and observations no longer result in row multiplication due to repeated entries.</p>
+<h4 id="2-structural-refactoring">2. Structural Refactoring</h4>
+<p>Preserved the overall query logic and structure while optimizing how inner joins are handled.</p>
+<p>Consolidated observation-based subqueries to ensure consistent date filtering and avoid redundant joins.</p>
+<h4 id="3-modality-and-observation-filtering-alignment">3. Modality and Observation Filtering Alignment</h4>
+<p>All filtering logic related to HIV testing modalities and testing forms was aligned to consistently reference the most recent relevant record.</p>
+<p>Ensured that testing history and testing modality are associated with the same encounter per patient.</p>
+<h4 id="4-performance-improvements">4. Performance Improvements</h4>
+<p>Removed use of SELECT DISTINCT from inner blocks in favor of GROUP BY, which is more efficient and deterministic for deduplication.</p>
+<p>Reduced the likelihood of Cartesian products by joining on more specific and consistent keys such as person_id and encounter_id.</p>
+<h4 id="5-result-set-integrity">5. Result Set Integrity</h4>
+<p>Ensured final result set columns (patient identifier, name, age, gender, HIV status, age group, etc.) remain accurate and unduplicated.</p>
+<p>Retained the expected semantic structure (e.g. columns labeled as “New”, “PITC”, “HIV Status”) without altering the labels or definitions.</p>
+<h2 id="21-jul-2025"><strong>21 Jul 2025</strong></h2>
 <h4 id="reports">Reports</h4>
 <ul>
 <li>We have optimized the sql query for better performance, and also removed duplicates</li>
@@ -2640,12 +2659,12 @@
 <li>Also added order by patient name so that duplicates can easily be seen</li>
 <li>Removed redundant code</li>
 </ul>
-<h3 id="23-jan-2025"><strong>23 Jan 2025</strong></h3>
+<h2 id="23-jan-2025"><strong>23 Jan 2025</strong></h2>
 <h4 id="reports_1">Reports</h4>
 <ul>
 <li>A fix on HTS reports as reported on <code>02-Jan-2025</code></li>
 </ul>
-<h3 id="02-jan-2025"><strong>02 Jan 2025</strong></h3>
+<h2 id="02-jan-2025"><strong>02 Jan 2025</strong></h2>
 <h4 id="reports_2">Reports</h4>
 <ul>
 <li>HTS-001 and HTS-002 corrected to pick all HTS clients from all service points</li>
