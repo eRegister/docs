@@ -12,13 +12,13 @@
         <meta name="author" content="Ministry of Health">
       
       
-        <link rel="canonical" href="https://github.com/eRegister/docs/ereg/bahmniapps/">
+        <link rel="canonical" href="https://github.com/eRegister/docs/ereg/upgrading-to-v1/">
       
       
-        <link rel="prev" href="../bahmniconfigs/">
+        <link rel="prev" href="../upgrading-to-092/">
       
       
-        <link rel="next" href="../bahmniaddons/">
+        <link rel="next" href="../bahmniconfigs/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Bahmni Apps Pipeline - Lesotho Health SI Systems Documentation</title>
+        <title>Upgrading to Bahmni v1 - Lesotho Health SI Systems Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#bahmni-apps-pipeline" class="md-skip">
+        <a href="#upgrading-to-bahmni-v1" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Bahmni Apps Pipeline
+              Upgrading to Bahmni v1
             
           </span>
         </div>
@@ -1840,10 +1840,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../upgrading-to-v1/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1859,6 +1868,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1868,8 +1878,6 @@
                 
   
   
-    
-  
   
   
     
@@ -1880,11 +1888,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4_8" >
         
           
           <label class="md-nav__link" for="__nav_4_4_8" id="__nav_4_4_8_label" tabindex="0">
@@ -1905,7 +1913,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_4_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_4_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1948,19 +1956,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../bahmniapps/" class="md-nav__link">
         
   
   
@@ -1976,7 +1975,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -3088,13 +3086,55 @@
 
 
 
-<h1 id="bahmni-apps-pipeline">Bahmni Apps Pipeline</h1>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<h1 id="upgrading-to-bahmni-v1">Upgrading to Bahmni v1</h1>
+<h3 id="artifacts-backup">Artifacts Backup</h3>
 <ul>
-<li>Content coming soon...</li>
+<li>Bahmni Configuration:<ul>
+<li>No need because everything's already hosted on GitHub</li>
 </ul>
-</div>
+</li>
+<li>Create a folder in the home directory and call it v1 with the following: <code>mkdir -p ~/v1</code></li>
+<li>OpenMRS Database Backup<ul>
+<li>cd into the v1 folder from wherever you are in the directory with: <code>cd ~/v1</code></li>
+<li>First, run your backup to have the latest DB of the facility being upgraded<ul>
+<li><code>docker exec -ti bahmni_docker_emr-service_1 bash</code></li>
+<li><code>cd /development</code> — this is done to put your DB on the /development_emr folder on the hosting system</li>
+<li><code>mysqldump -u root -p openmrs&amp;gt;openmrs_today.sql</code></li>
+<li><code>exit</code> to exit MySQL client</li>
+<li><code>exit</code> to exit Docker CLI, back to your server CLI</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cd ~/v1</code> to make sure you're in the v1 folder</li>
+<li>Clone the eRegister v1 upgrade with <code>git clone https://github.com/Lesotho-eRegister-v1/bahmni-docker-ls.git</code></li>
+<li>Clone the eRegister "bahmni_config" folder: <code>git clone https://github.com/Lesotho-eRegister-v1/standard-config-ls.git</code></li>
+<li>Create the backup folder (still inside v1) with <code>mkdir bahmni-backup</code></li>
+<li><code>sudo cp /development_emropenmrs/openmrs_today.sql bahmni-backup</code></li>
+<li><code>sudo cp -R /development_emropenmrs/bahmni_config092 bahmni-backup</code></li>
+<li><code>mv bahmni-backup/bahmni_config092 bahmni-backup/bahmni_config</code></li>
+<li>Rename your DB to openmrsdb_backup.sql</li>
+<li><code>mv bahmni-backup/openmrs_today.sql bahmni-backup/openmrsdb_backup.sql</code></li>
+<li>Make sure bahmni-backup has a folder named bahmni_config and a backup file named openmrsdb_backup.sql</li>
+<li>Two Step Restore:<ul>
+<li>Note: To perform the upgrade, we need our instance to be running on MySQL 8 to take advantage of the enhanced security features. But to do that, we need to start with restoring our backup to MySQL 5.7 since it was running on 5.7.30 on eRegister 0.92.</li>
+<li>Let the restore run for a while. It's going to take some time, obviously, with varying ETAs based on the size of the DB.</li>
+<li>After the backup has been restored, log in to the system and test that you can search for a client on the Registration module.</li>
+<li>Then stop your instance and change the image to MySQL 8</li>
+</ul>
+</li>
+<li><code>cd ~/v1/openmrs/bahmni-docker-ls/bahmni-standard</code></li>
+<li>Edit the .env to <code>OPENMRS_DB_IMAGE_NAME=mysql:5.7</code> and <code>REPORTS_DB_IMAGE_NAME=mysql:5.7</code></li>
+<li>Run <code>./restore_bahmni_standard.sh /home/openmrs/v1/bahmni-backup</code></li>
+<li><code>./run-bahmni.sh</code></li>
+<li>After testing that the restore went well, you can shut down the instance by running <code>./run-bahmni.sh</code> and choosing option (2)</li>
+<li>Edit the .env to <code>OPENMRS_DB_IMAGE_NAME=mysql:8.0</code> and <code>REPORTS_DB_IMAGE_NAME=mysql:8.0</code></li>
+<li>Restart your containers</li>
+</ul>
+<h3 id="security-enhancements">Security Enhancements</h3>
+<ul>
+<li><a href="https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password">MySQL enhancements from MySQL 8</a></li>
+</ul>
 
 
 
