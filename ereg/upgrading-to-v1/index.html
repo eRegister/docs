@@ -3124,11 +3124,10 @@
 </ul>
 </li>
 <li><code>cd ~/v1/openmrs/bahmni-docker-ls/bahmni-standard</code></li>
-<li>Edit the .env to <code>OPENMRS_DB_IMAGE_NAME=mysql:5.7</code> and <code>REPORTS_DB_IMAGE_NAME=mysql:5.7</code></li>
+<li>Edit the .env to <code>OPENMRS_DB_IMAGE_NAME=bahmni/openmrs-db:1.0.0-standard</code> and <code>REPORTS_DB_IMAGE_NAME=mysql:8.0</code></li>
 <li>Run <code>./restore_bahmni_standard.sh /home/openmrs/v1/bahmni-backup</code></li>
 <li><code>./run-bahmni.sh</code></li>
 <li>After testing that the restore went well, you can shut down the instance by running <code>./run-bahmni.sh</code> and choosing option (2)</li>
-<li>Edit the .env to <code>OPENMRS_DB_IMAGE_NAME=mysql:8.0</code> and <code>REPORTS_DB_IMAGE_NAME=mysql:8.0</code></li>
 <li>Restart your containers</li>
 </ul>
 <h3 id="harmonizing-the-concept-dictionary"><strong>Harmonizing the Concept Dictionary</strong></h3>
