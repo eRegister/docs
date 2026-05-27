@@ -6,8 +6,8 @@ After=dockerbootstrap.service
 
 
 [Service]
-WorkingDirectory=/development/bahmni_config_release
-ExecStart=/development/bahmni_config_release/gitpull.sh
+WorkingDirectory=/development_emr/bahmni_config_release
+ExecStart=/development_emr/bahmni_config_release/gitpull.sh
 StandardOutput=file:/var/log/gitpull.log
 StandardOutput=file:/var/log/gitpullbugs.log
 
