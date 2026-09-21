@@ -1843,7 +1843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../upgrading-to-v1/" class="md-nav__link">
+      <a href="../../upgrading-to-V1/" class="md-nav__link">
         
   
   
@@ -3698,6 +3698,11 @@ systemd is missing. Hosts with neither get the exact cron line to add by hand.</
 <p>Three parts, each with its own report row. Covered in full in
 <a href="../04-forms/">chapter 4</a>:</p>
 <ol>
+<li><strong>Check the clone is current</strong> — the import reads files off the disk, and
+   step 1 above can decline to refresh them for six different reasons. The step
+   prints the commit it is about to deploy and whether it was refreshed this
+   run, and a run that deploys from an unrefreshed clone gets a <code>GAP</code> row even
+   when the import itself succeeds</li>
 <li><strong>Retire</strong> the forms this release replaces (<code>--no-retire-forms</code> skips)</li>
 <li><strong>Import</strong> the forms whose content changed, and <strong>publish</strong> them
    (<code>--no-forms</code> skips the import, <code>--no-publish</code> skips just the publishing)</li>

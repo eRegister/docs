@@ -1843,7 +1843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../upgrading-to-v1/" class="md-nav__link">
+      <a href="../../upgrading-to-V1/" class="md-nav__link">
         
   
   
@@ -3542,11 +3542,39 @@ importer over the whole folder.</p>
 <h2 id="42-the-order-of-operations-in-a-catch-up-run">4.2 The order of operations in a catch-up run</h2>
 <div class="codehilite"><pre><span></span><code>_cu_forms_import
  ├─ is the runner installed and are there credentials?   → GAP if not
+ ├─ _cu_forms_clone_state   ← what is on disk, and is it current?
  ├─ &quot;Run the form import now?&quot;                           → SKIP if declined
  ├─ re-check the EMR password                            → GAP if rejected
  ├─ _forms_retire_stale     ← retire the outgoing set
  └─ run_form_import         ← deploy the incoming set, and publish it
 _cu_forms_decode            ← always, even if nothing was imported
+</code></pre></div>
+
+<h3 id="is-the-clone-current">Is the clone current?</h3>
+<p>The import reads JSON off the disk. Getting <em>current</em> JSON there is somebody
+else's job — step 1 of the catch-up run, and the runner's own refresh — and
+<strong>both of those can decline</strong>: a dirty tracked file, a detached HEAD, an
+off-release branch, a failed fetch, an unreadable repo.</p>
+<p>Each of those is reported in its own row and was then forgotten, so the import
+went ahead against whatever was on disk and reported a clean <code>imported 8/8</code>
+while deploying a months-old release. That is how a site stays frozen at one
+commit for weeks with nothing in the report looking wrong.</p>
+<p>So the import now says what it is about to deploy, before asking:</p>
+<div class="codehilite"><pre><span></span><code>[ℹ] Importing from /var/lib/v1/clinical-obs-forms — main @ 18758c6, committed 2026-09-11.
+[✔] That clone was brought up to date at the top of this run.
+</code></pre></div>
+
+<p>and when it could not be refreshed:</p>
+<div class="codehilite"><pre><span></span><code>[⚠] This clone was NOT refreshed this run:
+[⚠]   uncommitted changes to tracked files — left untouched; --force-repos to reset it onto main
+[⚠] So the forms about to be deployed are whatever 18758c6 holds — which
+[⚠] may be older than the release.
+</code></pre></div>
+
+<p>A run that deploys from an unrefreshed clone gets a <strong><code>GAP</code> import row</strong>, however
+well the import itself went — <code>imported 8/8</code> must not stand as though the site
+were current:</p>
+<div class="codehilite"><pre><span></span><code>  ✘ GAP  forms  import  imported 8/8 form(s) — from a clone that was NOT refreshed this run
 </code></pre></div>
 
 <p>The retirement sits <strong>inside</strong> the import step, after the confirmation and the
