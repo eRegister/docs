@@ -1,60 +1,113 @@
+# eRegister 0.92 Release Notes
 
-#### More changes coming....
+Changes to eRegister 0.92, listed newest first.
 
-Notes to be written here...
-More changes....
+## **06 Nov 2026**
 
-## **04 Aug 2025**
+!!! success "Latest release"
+    Forms 2.0 fixes, SMS reminder consent at registration, DISA lab-result notifications and barcodes, new DHIS2 data mappings, and an upgrade to MySQL 8.0.39.
 
-#### Generic Documentation of Changes Made to HIV Testing Reports
+#### 1. Improvement based on Bahmni Forms 2.0
+- **Forms 2.0 clinical tools** — bug fixes and refactoring of the Forms 2.0-based clinical tools in the Clinical Module.
+
+#### 2. Registration Module Enhancements
+- **SMS reminder consent** — the client's consent to receive SMS reminders is now captured, to improve adherence.
+
+    ![SMS reminder consent and Primary Contact fields on the Registration page](../pics/sms_consent_registration.png)
+
+- **Primary Contact alert** — an alert prompts users to capture the client's Primary Contact so that eRegister can send SMS reminders.
+
+    <img src="../../pics/primary_contact_alert.png" alt="Primary Contact missing alert" width="350">
+
+
+#### 3. DISA Integration Enhancements
+- **Notification bell** — users with access to the Clinical Module now have a notification center that alerts them when results arrive from the lab.
+
+    ![Lab results notification bell in the Clinical Module header](../pics/lab_results_notification_bell.png)
+
+- **Lab order barcode** — the patient dashboard now renders the lab order number as a Full ASCII (128) barcode, with the option to print it.
+
+    ![Lab Order Barcodes section on the patient dashboard](../pics/lab_order_barcode.png)
+
+- **LAB-009 Lab Shipping List** — now includes a barcode of the lab order number, so clinicians can print the shipping list and scan it easily with a barcode scanner.
+
+#### 4. Clinical Module Enhancements
+- **Blood draw alert** — improved alert reminding clinicians when the client is due for a blood draw.
+- **Patient queue** — improved numbering of queued patients.
+
+#### 5. Reports Module Enhancements
+- **Report search** — a Search button lets users search reports by name or code.
+
+#### 6. eRegister Mappings Development to Sync Data to Enhanced DHIS2
+Mappings are complete for syncing the following eRegister programs to datasets on the enhanced instance of DHIS2:
+
+| eRegister program | Enhanced DHIS2 dataset |
+| --- | --- |
+| Viral Load | Viral Load |
+| ANC | Integrated Facility Reporting |
+| HIV Care and Treatment | HIV Care and Treatment |
+| HTS | HTS |
+
+#### 7. Miscellaneous Improvements
+- **Concept Dictionary** — improved management of the Concept Dictionary to also support Patient Attributes.
+- **Versioning** — eRegister versioning now includes a link to the Release Notes.
+
+!!! warning "Upgrade to MySQL 8.0.39"
+    eRegister now uses MySQL 8.0.39 for its support of Window Functions, which are used in notifications and patient queue indexing. All functionalities for DHIS2 integration are not affected.
+
+---
+
+## 04 Aug 2025
+
+Changes made to the HIV Testing reports.
 
 #### 1. Deduplication Enhancements
-
-Replaced nested subqueries that returned multiple rows per patient with grouped queries to ensure one unique row per patient.
-
-Applied GROUP BY on core patient identifiers and demographic attributes (e.g. name, gender, age group).
-
-Used MAX() on time-sensitive fields (e.g. observation date, encounter ID) to extract the most relevant record per patient for reporting.
-
-Ensured that all joins involving testing forms, modalities, and observations no longer result in row multiplication due to repeated entries.
+- Replaced nested subqueries that returned multiple rows per patient with grouped queries, to ensure one unique row per patient.
+- Applied `GROUP BY` on core patient identifiers and demographic attributes (e.g. name, gender, age group).
+- Used `MAX()` on time-sensitive fields (e.g. observation date, encounter ID) to extract the most relevant record per patient for reporting.
+- Ensured that joins involving testing forms, modalities and observations no longer multiply rows because of repeated entries.
 
 #### 2. Structural Refactoring
-Preserved the overall query logic and structure while optimizing how inner joins are handled.
-
-Consolidated observation-based subqueries to ensure consistent date filtering and avoid redundant joins.
+- Preserved the overall query logic and structure while optimizing how inner joins are handled.
+- Consolidated observation-based subqueries to ensure consistent date filtering and avoid redundant joins.
 
 #### 3. Modality and Observation Filtering Alignment
-All filtering logic related to HIV testing modalities and testing forms was aligned to consistently reference the most recent relevant record.
-
-Ensured that testing history and testing modality are associated with the same encounter per patient.
+- All filtering logic related to HIV testing modalities and testing forms was aligned to consistently reference the most recent relevant record.
+- Ensured that testing history and testing modality are associated with the same encounter per patient.
 
 #### 4. Performance Improvements
-Removed use of SELECT DISTINCT from inner blocks in favor of GROUP BY, which is more efficient and deterministic for deduplication.
-
-Reduced the likelihood of Cartesian products by joining on more specific and consistent keys such as person_id and encounter_id.
+- Replaced `SELECT DISTINCT` in inner blocks with `GROUP BY`, which is more efficient and deterministic for deduplication.
+- Reduced the likelihood of Cartesian products by joining on more specific and consistent keys such as `person_id` and `encounter_id`.
 
 #### 5. Result Set Integrity
-Ensured final result set columns (patient identifier, name, age, gender, HIV status, age group, etc.) remain accurate and unduplicated.
+- Ensured that the final result set columns (patient identifier, name, age, gender, HIV status, age group, etc.) remain accurate and free of duplicates.
+- Retained the expected semantic structure (e.g. columns labeled "New", "PITC", "HIV Status") without altering the labels or definitions.
 
-Retained the expected semantic structure (e.g. columns labeled as “New”, “PITC”, “HIV Status”) without altering the labels or definitions.
+---
 
-## **21 Jul 2025**
-
-#### Reports
-- We have optimized the sql query for better performance, and also removed duplicates
-- Avoided using JOIN keyword all the time. Now the query is using conditional keyword CASE and WHEN statements to query data
-- Also added order by patient name so that duplicates can easily be seen
-- Removed redundant code
-
-## **23 Jan 2025**
+## 21 Jul 2025
 
 #### Reports
-- A fix on HTS reports as reported on `02-Jan-2025`
+- Optimized the SQL query for better performance, and removed duplicates.
+- Stopped using `JOIN` everywhere; the query now uses conditional `CASE` and `WHEN` statements to query data.
+- Added ordering by patient name so that duplicates can easily be seen.
+- Removed redundant code.
 
-## **02 Jan 2025**
+---
+
+## 23 Jan 2025
 
 #### Reports
-- HTS-001 and HTS-002 corrected to pick all HTS clients from all service points
+- A fix on HTS reports as reported on `02-Jan-2025`.
+
+---
+
+## 02 Jan 2025
+
+#### Reports
+- HTS-001 and HTS-002 corrected to pick all HTS clients from all service points.
+
+---
 
 ### **Release Notes October 2023**
 #### Updates
@@ -106,6 +159,8 @@ Removal of duplication caused by EDD not being confined to the observation date.
 - Adding Latest developments made to k8s cluster
 - Adding Latest developments made to k8s cluster
 
+---
+
 ### **Release Notes September 2023**
 #### Updates
 - Modified the query to remove duplication caused by one child having multiple vaccines on a dose
@@ -127,6 +182,9 @@ Added TB status global variable
 - Children ARV Regimen_2ndLine_Adherence, Viral Load
 - Children ARV Regimen_3rdLine_6A, 6B, 6C, 6D, 6E, 6F
 - Children ARV Regimen_3rdLine_Adherence, Viral Load
+
+---
+
 ### **Release Notes August 2023**
 #### ANC
 ##### ANC Form fixes and modifications
@@ -160,6 +218,8 @@ Added TB status global variable
 - Renamed DISA parameter codes and added new LOINC code
 - Remove HPV results error in cervical cancer screening form
 - Reports.json : Added Cervical Cancer Screening (List)
+
+---
 
 ### **Release Notes July 2023** 
 #### TB
@@ -219,6 +279,7 @@ The following attributes are now auto filled from previous visits in the ANC Reg
 - Added corresponding new refence terms 
 - Created new viral load concepts and added mappings to the new and existing concepts.
 
+---
 
 ### **Release Notes June 2023**
 #### 
@@ -303,6 +364,7 @@ Male Partner Involvement: HIV Status hidden by default, visible when
 - TB-019 | TB Intakes (List) - Corrected to include intakes captured within a year of the report start date only
 - TB-020 | TB Intakes (Pivot)- Aligned with the list version
 
+---
 
 ### **Release Notes May 2023**
 
@@ -351,6 +413,7 @@ Male Partner Involvement: HIV Status hidden by default, visible when
  - ART-080 | Visitors Report (List)
  - ART-081 | Visitors Report (Pivot) 
 
+---
 
 ### **Release Notes April 2023**
 
@@ -684,7 +747,9 @@ ___
     * Place of Delivery is Not Mandatory on ANC Form (While it remains Mandatory on the PNC Form)
 * ##### Appointments Module
     * Fixed Column Headings of The Appointment Module List View
-  
+
+---
+
 ##- Release Candidate (RC) #1
 
 * ##### Pharmacy Module
